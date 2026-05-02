@@ -1,19 +1,15 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { 
-  Menu, 
-  X, 
-  Home, 
-  Users, 
-  Target, 
-  Heart, 
-  FileText, 
+import {
+  Menu,
+  X,
+  Home,
+  Users,
+  FileText,
   Calendar,
   TrendingUp,
   Award,
-  Handshake,
-  Mail
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -26,47 +22,36 @@ export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('#home');
 
-  // Navigation links configuration
   const navLinks = [
     { href: '/', label: 'Home', icon: Home },
-    { href: '/mentors', label: 'Mentors', icon: Users },
-    { href: '/resources', label: 'Resources', icon: FileText },
+    { href: '/about', label: 'About', icon: Users },
+    { href: '/mentors', label: 'Mentors', icon: Award },
     { href: '/events', label: 'Events', icon: Calendar },
-    { href: '/#mission', label: 'Mission', icon: Target },
-    { href: '/#journey', label: 'Transformation', icon: TrendingUp },
-    { href: '/#success-stories', label: 'Success Stories', icon: Award },
-    { href: '/#impact', label: 'Archive', icon: FileText },
-    { href: '/#partners', label: 'Partners', icon: Handshake },
-    { href: '/#footer', label: 'Footer', icon: Mail },
-    { href: '/#get-involved', label: 'Get Involved', icon: Heart },
+    { href: '/resources', label: 'Resources', icon: FileText },
+    { href: '/#impact', label: 'Archive', icon: TrendingUp },
   ];
 
   // Smooth scroll handler
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     setIsMobileMenuOpen(false);
 
-    // Handle homepage sections (format: /#section)
     if (href.startsWith('/#')) {
       e.preventDefault();
-      const sectionId = href.substring(1); // Get '#section' from '/#section'
-      
-      // If we're not on the homepage, navigate there first
+      const sectionId = href.substring(1);
+
       if (router.pathname !== '/') {
         router.push(href).then(() => {
-          // After navigation, scroll to the section
           setTimeout(() => {
             const element = document.querySelector(sectionId);
             element?.scrollIntoView({ behavior: 'smooth' });
           }, 100);
         });
       } else {
-        // Already on homepage, just scroll
         const element = document.querySelector(sectionId);
         element?.scrollIntoView({ behavior: 'smooth' });
         setActiveSection(sectionId);
       }
     }
-    // For regular page navigation (/, /mentors, /resources, /events), Next.js Link handles it
   };
 
   // Scroll detection for enhanced glassmorphism and active section
@@ -84,7 +69,6 @@ export function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      // Detect active section
       for (const section of sections) {
         const element = document.querySelector(section);
         if (element) {
@@ -99,8 +83,6 @@ export function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-
 
   return (
     <nav
@@ -134,7 +116,7 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden items-center space-x-1 md:flex">
-            {navLinks.map((link, index) => {
+            {navLinks.map((link) => {
               const isActive = activeSection === link.href;
               const IconComponent = link.icon;
 
@@ -161,36 +143,12 @@ export function Navbar() {
                       transition={{ duration: 0.3 }}
                     />
 
-                    {/* Content wrapper */}
+                    {/* Icon + label */}
                     <span className="relative z-10 flex items-center gap-2 font-medium text-off-white/90 transition-colors duration-200 group-hover:text-gold">
-                      <IconComponent className="h-5 w-5 transition-colors duration-200 group-hover:text-[#FFD700]" />
+                      <IconComponent className="h-5 w-5 transition-colors duration-200" />
+                      <span className="text-sm font-medium">{link.label}</span>
                     </span>
-
-                  {/* Floating particle effects (5 particles in circle pattern) */}
-                  {[...Array(5)].map((_, particleIndex) => (
-                    <motion.div
-                      key={particleIndex}
-                      className="pointer-events-none absolute h-1 w-1 rounded-full bg-gold/60"
-                      style={{
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                      }}
-                      animate={{
-                        x: [0, Math.cos((particleIndex * 72 * Math.PI) / 180) * 30],
-                        y: [0, Math.sin((particleIndex * 72 * Math.PI) / 180) * 30],
-                        opacity: [0, 0.8, 0],
-                        scale: [0, 1, 0],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: particleIndex * 0.2 + index * 0.1,
-                        ease: 'easeOut',
-                      }}
-                    />
-                  ))}
-                </motion.a>
+                  </motion.a>
                 </Tooltip>
               );
             })}
@@ -203,9 +161,8 @@ export function Navbar() {
               whileTap={{ scale: 0.98 }}
               className="group relative"
             >
-              <button 
+              <button
                 onClick={() => {
-                  // Dispatch event to open modal at app root level
                   window.dispatchEvent(new Event('open-donation-modal'));
                 }}
                 className="glass-button relative overflow-hidden rounded-full px-6 py-2 font-semibold text-off-white transition-all duration-300"
@@ -287,36 +244,12 @@ export function Navbar() {
                         transition={{ duration: 0.3 }}
                       />
 
-                      {/* Link text */}
+                      {/* Icon + label */}
                       <span className="relative z-10 flex items-center gap-2 font-medium text-off-white/90 transition-colors duration-200 group-hover:text-gold">
-                        <IconComponent className="h-5 w-5 transition-colors duration-200 group-hover:text-[#FFD700]" />
+                        <IconComponent className="h-5 w-5 transition-colors duration-200" />
+                        <span className="text-sm font-medium">{link.label}</span>
                       </span>
-
-                    {/* Floating particle effects (3 particles for mobile) */}
-                    {[...Array(3)].map((_, particleIndex) => (
-                      <motion.div
-                        key={particleIndex}
-                        className="pointer-events-none absolute h-1 w-1 rounded-full bg-gold/60"
-                        style={{
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                        }}
-                        animate={{
-                          x: [0, Math.cos((particleIndex * 120 * Math.PI) / 180) * 20],
-                          y: [0, Math.sin((particleIndex * 120 * Math.PI) / 180) * 20],
-                          opacity: [0, 0.8, 0],
-                          scale: [0, 1, 0],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          delay: particleIndex * 0.3 + index * 0.1,
-                          ease: 'easeOut',
-                        }}
-                      />
-                    ))}
-                  </motion.a>
+                    </motion.a>
                   </Tooltip>
                 );
               })}
@@ -330,9 +263,8 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: navLinks.length * 0.1 }}
               >
-                <button 
+                <button
                   onClick={() => {
-                    // Dispatch event to open modal at app root level
                     window.dispatchEvent(new Event('open-donation-modal'));
                   }}
                   className="glass-button relative w-full overflow-hidden rounded-full py-3 font-semibold text-off-white transition-all duration-300"
